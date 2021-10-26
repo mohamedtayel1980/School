@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Repositories
 {
-    interface IStudentRepository : IRepositoryBase<Student>
+   public interface IStudentRepository : IRepositoryBase<Student>
     {
     }
 }
