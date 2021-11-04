@@ -1,10 +1,15 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Persistence;
 using Persistence.Logging;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using WEB.CustomExceptionMiddleware;
 
 namespace WEB.Extensions
 {
@@ -29,6 +34,16 @@ namespace WEB.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
+        }
+        public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration config)
+        {
+            services.AddDbContextPool<RepositoryContext>(opts =>
+             opts.UseSqlServer(config.GetConnectionString("sqlConnection"),
+             options => options.MigrationsAssembly("EFCoreApp")));
+        }
+        public static void ConfigureCustomExceptionMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<ExceptionMiddleware>();
         }
     }
 }

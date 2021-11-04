@@ -34,10 +34,14 @@ namespace WEB
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
+            services.ConfigureSqlContext(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app,
+            IWebHostEnvironment env
+             ,
+            ILoggerManager logger)
         {
             if (env.IsDevelopment())
             {
@@ -49,6 +53,7 @@ namespace WEB
             {
                 ForwardedHeaders = ForwardedHeaders.All
             });
+            app.ConfigureCustomExceptionMiddleware();
             app.UseRouting();
             app.UseCors("CorsPolicy");
             app.UseAuthorization();
