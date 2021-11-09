@@ -8,15 +8,15 @@ namespace Services.Abstractions
 {
     public interface IStudentService
     {
-        Task<IEnumerable<StudentDto>> GetAllAsync(CancellationToken cancellationToken = default);
+        IEnumerable<StudentDto> GetAll();
 
-        Task<StudentDto> GetByIdAsync(Guid studentId, CancellationToken cancellationToken = default);
+       StudentDto GetById(Guid studentId);
 
-        Task<StudentDto> CreateAsync(StudentDto studentForCreationDto, CancellationToken cancellationToken = default);
+        StudentDtoForCreation Create(StudentDtoForCreation studentForCreationDto);
 
-        Task UpdateAsync(Guid studentId, StudentDto studentForUpdateDto, CancellationToken cancellationToken = default);
+        void Update(Guid studentId, StudentDto studentForUpdateDto);
 
-        Task DeleteAsync(Guid studentId, CancellationToken cancellationToken = default);
+        void Delete(Guid studentId);
     }
 
 }
