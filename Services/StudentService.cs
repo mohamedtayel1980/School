@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Contracts;
 using Domain.Entities;
+using Domain.Exceptions.StudentExceptions;
 using Domain.Repositories;
 using Services.Abstractions;
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 namespace Services
 {
     internal sealed class StudentService : IStudentService
@@ -22,6 +23,8 @@ namespace Services
 
         public StudentDto Create(StudentDtoForCreation studentForCreationDto)
         {
+            if (studentForCreationDto == null)
+                throw new StudentCreationBadRequest("Student object sent from client is null.");
             var student = _mapper.Map<Student>(studentForCreationDto);
             _repositoryManager.StudentRepository.Create(student);
             _repositoryManager.UnitOfWork.SaveChanges();
@@ -31,7 +34,11 @@ namespace Services
 
         public void Delete(Guid studentId)
         {
-            throw new NotImplementedException();
+            var studentEntity = _repositoryManager.StudentRepository
+                .FindByCondition(s => s.Id.Equals(studentId)).FirstOrDefault();
+            if (studentEntity == null) throw new StudentNotFound($"Student with Id{studentId} not found");
+            _repositoryManager.StudentRepository.Delete(studentEntity);
+            _repositoryManager.UnitOfWork.SaveChanges();
         }
 
         public IEnumerable<StudentDto> GetAll()
@@ -50,7 +57,14 @@ namespace Services
 
         public void Update(Guid studentId, StudentDtoForUpdate student)
         {
-            throw new NotImplementedException();
+            if (student == null)
+                throw new StudentCreationBadRequest("Student object sent from client is null.");
+            var studentEntity = _repositoryManager.StudentRepository
+                .FindByCondition(s =>s.Id.Equals(studentId)).FirstOrDefault();
+            if (studentEntity == null) throw new StudentNotFound($"Student with Id{studentId} not found");
+            _mapper.Map(student, studentEntity);
+            _repositoryManager.StudentRepository.Update(studentEntity);
+            _repositoryManager.UnitOfWork.SaveChanges();
         }
     }
 }
