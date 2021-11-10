@@ -14,6 +14,8 @@ namespace Services.MappingConfigurations
         public StudentProfile()
         {
             CreateMap<Student, StudentDto>().ReverseMap();
+            CreateMap<Student, StudentDtoForCreation>();
+            CreateMap<Student, StudentDtoForUpdate>();
         }
     }
 }

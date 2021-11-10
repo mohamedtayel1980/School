@@ -20,11 +20,13 @@ namespace Services
             _mapper = mapper;
         }
 
-        public StudentDtoForCreation Create(StudentDtoForCreation studentForCreationDto)
+        public StudentDto Create(StudentDtoForCreation studentForCreationDto)
         {
             var student = _mapper.Map<Student>(studentForCreationDto);
             _repositoryManager.StudentRepository.Create(student);
-            return studentForCreationDto;
+            _repositoryManager.UnitOfWork.SaveChanges();
+            var studentdto = _mapper.Map<StudentDto>(student);
+            return studentdto;
         }
 
         public void Delete(Guid studentId)
@@ -44,11 +46,11 @@ namespace Services
             throw new NotImplementedException();
         }
 
-        public void Update(Guid studentId, StudentDto studentForUpdateDto)
+       
+
+        public void Update(Guid studentId, StudentDtoForUpdate student)
         {
             throw new NotImplementedException();
         }
-
-       
     }
 }

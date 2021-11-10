@@ -10,11 +10,11 @@ namespace Services.Abstractions
     {
         IEnumerable<StudentDto> GetAll();
 
-       StudentDto GetById(Guid studentId);
+        StudentDto GetById(Guid studentId);
 
-        StudentDtoForCreation Create(StudentDtoForCreation studentForCreationDto);
+        StudentDto Create(StudentDtoForCreation studentForCreationDto);
 
-        void Update(Guid studentId, StudentDto studentForUpdateDto);
+        void Update(Guid studentId, StudentDtoForUpdate student);
 
         void Delete(Guid studentId);
     }

@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Domain.Exceptions;
+using Microsoft.AspNetCore.Http;
 using Persistence.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
 using WEB.Models;
 
@@ -38,17 +40,20 @@ namespace WEB.CustomExceptionMiddleware
         private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            var message = exception switch
+
+            context.Response.StatusCode = exception switch
             {
-                AccessViolationException => "Access violation error from the custom middleware",
-                _ => "Internal Server Error ."
+                BadRequestException => StatusCodes.Status400BadRequest,
+                NotFoundException => StatusCodes.Status404NotFound,
+                _ => StatusCodes.Status500InternalServerError
             };
-            await context.Response.WriteAsync(new ErrorDetails()
+
+            var response = new
             {
-                StatusCode = context.Response.StatusCode,
-                Message = message
-            }.ToString());
+                error = exception.Message
+            };
+
+            await context.Response.WriteAsync(JsonSerializer.Serialize(response));
         }
 
     }
