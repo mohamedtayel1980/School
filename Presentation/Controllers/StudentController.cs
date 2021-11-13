@@ -1,6 +1,5 @@
 ﻿using Contracts;
-using Domain.Exceptions;
-using Domain.Exceptions.StudentExceptions;
+
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using System;

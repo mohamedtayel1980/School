@@ -48,6 +48,16 @@ namespace Services
             return studentsDto;
         }
 
+        public IEnumerable<StudentDto> GetAllPaging(StudentPaging studentPaging)
+        {
+          return GetAll()
+                .OrderBy(sd => sd.Name)
+                .Skip((studentPaging.PageNumber - 1) * studentPaging.PageSize)
+                .Take(studentPaging.PageSize)
+                .ToList(); ;
+        
+        }
+
         public StudentDto GetById(Guid studentId)
         {
             throw new NotImplementedException();

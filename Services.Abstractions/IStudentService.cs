@@ -1,4 +1,5 @@
 ﻿using Contracts;
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -9,6 +10,7 @@ namespace Services.Abstractions
     public interface IStudentService
     {
         IEnumerable<StudentDto> GetAll();
+        IEnumerable<StudentDto> GetAllPaging(StudentPaging studentPaging);
 
         StudentDto GetById(Guid studentId);
 
