@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
+using CrossCutting.Paging;
 using Domain.Entities;
 using Domain.Exceptions.StudentExceptions;
 using Domain.Repositories;
@@ -48,14 +49,19 @@ namespace Services
             return studentsDto;
         }
 
-        public IEnumerable<StudentDto> GetAllPaging(StudentPaging studentPaging)
+        public PagedList<StudentDto> GetAllPaging(StudentPaging studentPaging)
         {
-          return GetAll()
-                .OrderBy(sd => sd.Name)
-                .Skip((studentPaging.PageNumber - 1) * studentPaging.PageSize)
-                .Take(studentPaging.PageSize)
-                .ToList(); ;
-        
+            //return GetAll()
+            //      .OrderBy(sd => sd.Name)
+            //      .Skip((studentPaging.PageNumber - 1) * studentPaging.PageSize)
+            //      .Take(studentPaging.PageSize)
+            //      .ToList(); ;
+            var students = _repositoryManager.StudentRepository.FindAll();         
+            var studentsPaged= PagedList<Student>.ToPagedList(students.OrderBy(on => on.Name),
+                              studentPaging.PageNumber,
+                              studentPaging.PageSize);
+            return _mapper.Map<PagedList<StudentDto>>(studentsPaged);
+
         }
 
         public StudentDto GetById(Guid studentId)
@@ -63,14 +69,14 @@ namespace Services
             throw new NotImplementedException();
         }
 
-       
+
 
         public void Update(Guid studentId, StudentDtoForUpdate student)
         {
             if (student == null)
                 throw new StudentCreationBadRequest("Student object sent from client is null.");
             var studentEntity = _repositoryManager.StudentRepository
-                .FindByCondition(s =>s.Id.Equals(studentId)).FirstOrDefault();
+                .FindByCondition(s => s.Id.Equals(studentId)).FirstOrDefault();
             if (studentEntity == null) throw new StudentNotFound($"Student with Id{studentId} not found");
             _mapper.Map(student, studentEntity);
             _repositoryManager.StudentRepository.Update(studentEntity);

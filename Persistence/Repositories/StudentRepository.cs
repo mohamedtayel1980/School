@@ -1,7 +1,7 @@
 ﻿using Contracts;
 using Domain.Entities;
 using Domain.Repositories;
-
+using CrossCutting.Paging;
 using Persistence.RepositorisOpitions;
 using System;
 using System.Collections.Generic;

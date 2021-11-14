@@ -1,12 +1,9 @@
 ﻿using Contracts;
-
+using CrossCutting.Paging;
 using Microsoft.AspNetCore.Mvc;
 using Services.Abstractions;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace Presentation.Controllers
 {
@@ -21,6 +18,21 @@ namespace Presentation.Controllers
             var studentsDto = _serviceManager.StudentService.GetAll();
 
             return Ok(studentsDto);
+        }
+        public IActionResult GetStudentsPaged([FromQuery] StudentPaging studentPaging)
+        {
+            var students = _serviceManager.StudentService.GetAllPaging(studentPaging);
+            var metadata = new
+            {
+                students.TotalCount,
+                students.PageSize,
+                students.CurrentPage,
+                students.TotalPages,
+                students.HasNext,
+                students.HasPrevious
+            };
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
+            return Ok(students);
         }
         [Route("AddStudent")]
         [HttpPost]

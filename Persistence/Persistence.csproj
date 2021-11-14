@@ -11,11 +11,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Contract\Contracts.csproj" />
+    <ProjectReference Include="..\CrossCutting\CrossCutting.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="PagingParamters\" />
   </ItemGroup>
 
 </Project>
