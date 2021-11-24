@@ -2,7 +2,7 @@
 
 namespace Domain.Entities
 {
-    public class Entity
+    public class BaseEntity
     {
         public Guid Id { get; set; }
         public string  CreatedBY { get; set; }

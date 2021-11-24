@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Domain.Entities
 {
     [Table("Student")]
-    public class Student:Entity
+    public class Student:BaseEntity
     {
        
         [Required]

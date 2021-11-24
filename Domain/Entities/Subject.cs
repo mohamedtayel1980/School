@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Entities
 {
-    public class Subject:Entity
+    public class Subject:BaseEntity
     {
         public string SubjectName { get; set; }
         public ICollection<StudentSubject> StudentSubjects { get; set; }

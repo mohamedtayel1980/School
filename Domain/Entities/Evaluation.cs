@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Entities
 {
-    public class Evaluation:Entity
+    public class Evaluation:BaseEntity
     {
         [Required]
         public int Grade { get; set; }
