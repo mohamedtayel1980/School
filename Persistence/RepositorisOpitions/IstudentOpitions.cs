@@ -12,6 +12,6 @@ namespace Persistence.RepositorisOpitions
 {
     public interface IstudentOpitions
     {
-        IEnumerable<Student> GetStudentsPaged(StudentPaging studentPaging);
+        IEnumerable<Student> GetStudentsPaged(StudentParametersPaging studentPaging);
     }
 }

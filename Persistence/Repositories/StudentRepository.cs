@@ -13,21 +13,33 @@ using System.Threading.Tasks;
 namespace Persistence.Repositories
 {
     internal sealed class StudentRepository : RepositoryBase<Student>,
-        IStudentRepository,
-        IstudentOpitions
+        IStudentRepository
     {
         public StudentRepository(RepositoryContext repositoryContext)
              : base(repositoryContext)
         {
         }
 
-        public IEnumerable<Student> GetStudentsPaged(StudentPaging studentPaging)
+        public IEnumerable<Student> GetStudentsPaged(StudentParametersPaging studentParametersPaging)
         {
-            return FindAll()
-                  .OrderBy(on => on.Name)
-                  .Skip((studentPaging.PageNumber - 1) * studentPaging.PageSize)
-                  .Take(studentPaging.PageSize)
-                  .ToList();
+            IQueryable<Student> students = FindByCondition(o => o.Age >= studentParametersPaging.MinAge &&
+                              o.Age <= studentParametersPaging.MaxAge)
+                             .OrderBy(on => on.Name);
+            SearchByName(ref students, studentParametersPaging.Name);
+            return PagedList<Student>.ToPagedList(students,
+                studentParametersPaging.PageNumber,
+                studentParametersPaging.PageSize);
+            //return FindAll()
+            //      .OrderBy(on => on.Name)
+            //      .Skip((studentPaging.PageNumber - 1) * studentPaging.PageSize)
+            //      .Take(studentPaging.PageSize)
+            //      .ToList();
+        }
+        private void SearchByName(ref IQueryable<Student> students, string studentName)
+        {
+            if (!students.Any() || string.IsNullOrWhiteSpace(studentName))
+                return;
+            students = students.Where(o => o.Name.ToLower().Contains(studentName.Trim().ToLower()));
         }
     }
 }

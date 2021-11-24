@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CrossCutting.Paging
 {
-    public class PagingParamiters
+    public abstract class PagingParamiters
     {
         const int maxPageSize = 50;
         public int PageNumber { get; set; } = 1;

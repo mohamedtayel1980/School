@@ -11,7 +11,7 @@ namespace Services.Abstractions
     public interface IStudentService
     {
         IEnumerable<StudentDto> GetAll();
-        PagedList<StudentDto> GetAllPaging(StudentPaging studentPaging);
+        PagedList<StudentDto> GetAllPaging(StudentParametersPaging studentPaging);
 
         StudentDto GetById(Guid studentId);
 

@@ -19,7 +19,7 @@ namespace Presentation.Controllers
 
             return Ok(studentsDto);
         }
-        public IActionResult GetStudentsPaged([FromQuery] StudentPaging studentPaging)
+        public IActionResult GetStudentsPaged([FromQuery] StudentParametersPaging studentPaging)
         {
             var students = _serviceManager.StudentService.GetAllPaging(studentPaging);
             var metadata = new

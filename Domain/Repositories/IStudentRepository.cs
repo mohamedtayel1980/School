@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using CrossCutting.Paging;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,6 @@ namespace Domain.Repositories
 {
    public interface IStudentRepository : IRepositoryBase<Student>
     {
+        IEnumerable<Student> GetStudentsPaged(StudentParametersPaging studentPaging);
     }
 }

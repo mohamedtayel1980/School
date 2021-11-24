@@ -49,17 +49,15 @@ namespace Services
             return studentsDto;
         }
 
-        public PagedList<StudentDto> GetAllPaging(StudentPaging studentPaging)
+        public PagedList<StudentDto> GetAllPaging(StudentParametersPaging studentPaging)
         {
             //return GetAll()
             //      .OrderBy(sd => sd.Name)
             //      .Skip((studentPaging.PageNumber - 1) * studentPaging.PageSize)
             //      .Take(studentPaging.PageSize)
             //      .ToList(); ;
-            var students = _repositoryManager.StudentRepository.FindAll();         
-            var studentsPaged= PagedList<Student>.ToPagedList(students.OrderBy(on => on.Name),
-                              studentPaging.PageNumber,
-                              studentPaging.PageSize);
+            var studentsPaged = _repositoryManager.StudentRepository.GetStudentsPaged(studentPaging);         
+            
             return _mapper.Map<PagedList<StudentDto>>(studentsPaged);
 
         }
