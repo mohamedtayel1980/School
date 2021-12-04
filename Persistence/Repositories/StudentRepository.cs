@@ -9,15 +9,20 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using CrossCutting.Sorting;
 
 namespace Persistence.Repositories
 {
     internal sealed class StudentRepository : RepositoryBase<Student>,
         IStudentRepository
     {
-        public StudentRepository(RepositoryContext repositoryContext)
+        private readonly ISortHelper<Student> _sortHelper;
+
+        public StudentRepository(RepositoryContext repositoryContext, 
+            ISortHelper<Student> sortHelper)
              : base(repositoryContext)
         {
+            _sortHelper = sortHelper;
         }
 
         public IEnumerable<Student> GetStudentsPaged(StudentParametersPaging studentParametersPaging)
@@ -26,7 +31,8 @@ namespace Persistence.Repositories
                               o.Age <= studentParametersPaging.MaxAge)
                              .OrderBy(on => on.Name);
             SearchByName(ref students, studentParametersPaging.Name);
-            return PagedList<Student>.ToPagedList(students,
+            var sortedStudents = _sortHelper.ApplySort(students, studentParametersPaging.OrderBy);
+            return PagedList<Student>.ToPagedList(sortedStudents,
                 studentParametersPaging.PageNumber,
                 studentParametersPaging.PageSize);
             //return FindAll()
