@@ -7,33 +7,39 @@ using System.Text.Json;
 
 namespace Presentation.Controllers
 {
-    [ApiController]
+   
     [Route("api/students")]
+    [ApiController]
     public class StudentController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
         public StudentController(IServiceManager serviceManager) => _serviceManager = serviceManager;
-        public IActionResult GetStudents()
-        {
-            var studentsDto = _serviceManager.StudentService.GetAll();
 
-            return Ok(studentsDto);
-        }
-        public IActionResult GetStudentsPaged([FromQuery] StudentParametersPaging studentPaging)
+        public string Get()
         {
-            var students = _serviceManager.StudentService.GetAllPaging(studentPaging);
-            var metadata = new
-            {
-                students.TotalCount,
-                students.PageSize,
-                students.CurrentPage,
-                students.TotalPages,
-                students.HasNext,
-                students.HasPrevious
-            };
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
-            return Ok(students);
+            return "Hello";
         }
+        //public IActionResult GetStudents()
+        //{
+        //    var studentsDto = _serviceManager.StudentService.GetAll();
+
+        //    return Ok(studentsDto);
+        //}
+        //public IActionResult GetStudentsPaged([FromQuery] StudentParametersPaging studentPaging)
+        //{
+        //    var students = _serviceManager.StudentService.GetAllPaging(studentPaging);
+        //    var metadata = new
+        //    {
+        //        students.TotalCount,
+        //        students.PageSize,
+        //        students.CurrentPage,
+        //        students.TotalPages,
+        //        students.HasNext,
+        //        students.HasPrevious
+        //    };
+        //    Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
+        //    return Ok(students);
+        //}
         [Route("AddStudent")]
         [HttpPost]
         public IActionResult CreateStudent([FromBody] StudentDtoForCreation student)

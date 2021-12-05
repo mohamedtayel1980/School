@@ -30,7 +30,10 @@ namespace WEB
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+              .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
+       //     services.AddSwaggerGen(c =>
+       //c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web", Version = "v1" }));
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();
@@ -56,8 +59,9 @@ namespace WEB
                 ForwardedHeaders = ForwardedHeaders.All
             });
             app.ConfigureCustomExceptionMiddleware();
-            app.UseRouting();
+          
             app.UseCors("CorsPolicy");
+            app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
