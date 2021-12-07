@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Contracts;
-using CrossCutting.Paging;
+using Utilities.Paging;
 using Domain.Entities;
 using Domain.Exceptions.StudentExceptions;
 using Domain.Repositories;
@@ -62,6 +62,7 @@ namespace Services
 
         }
 
+        
         public StudentDto GetById(Guid studentId)
         {
             throw new NotImplementedException();

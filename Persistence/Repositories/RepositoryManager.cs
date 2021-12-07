@@ -1,4 +1,4 @@
-﻿using CrossCutting.Sorting;
+﻿using Utilities.Sorting;
 using Domain.Entities;
 using Domain.Repositories;
 using System;
@@ -14,13 +14,16 @@ namespace Persistence.Repositories
         private readonly Lazy<IStudentRepository> _lazyStudentRepository;
         //private readonly Lazy<IAccountRepository> _lazyAccountRepository;
         private readonly Lazy<IUnitOfWork> _lazyUnitOfWork;
-        private ISortHelper<Student> _studentSortHelper;
-     
-        public RepositoryManager(RepositoryContext dbContext)
+        private readonly ISortHelper<Student> _studentSortHelper;
+
+        public RepositoryManager(RepositoryContext dbContext, 
+            ISortHelper<Student> studentSortHelper)
         {
+            _studentSortHelper = studentSortHelper;
             _lazyStudentRepository = new Lazy<IStudentRepository>(() => new StudentRepository(dbContext, _studentSortHelper));
             //_lazyAccountRepository = new Lazy<IAccountRepository>(() => new AccountRepository(dbContext));
             _lazyUnitOfWork = new Lazy<IUnitOfWork>(() => new UnitOfWork(dbContext));
+            _studentSortHelper = studentSortHelper;
         }
         public IStudentRepository StudentRepository => _lazyStudentRepository.Value;
 

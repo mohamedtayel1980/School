@@ -1,5 +1,5 @@
 ﻿using Contracts;
-using CrossCutting.Paging;
+using Utilities.Paging;
 using Domain.Entities;
 
 using System;
