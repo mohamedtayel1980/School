@@ -8,8 +8,4 @@
     <PackageReference Include="System.Linq.Dynamic.Core" Version="1.2.14" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DataShaping\" />
-  </ItemGroup>
-
 </Project>

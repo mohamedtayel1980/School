@@ -1,5 +1,6 @@
 ﻿using CrossCutting.Sorting;
 using Domain.Entities;
+using Domain.Entities.Helpers;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -52,6 +53,7 @@ namespace WEB.Extensions
         public static void ConfigureRepositoryManager(this IServiceCollection services)
         {
             services.AddScoped<ISortHelper<Student>, SortHelper<Student>>();
+            services.AddScoped<IDataShaper<Student>, DataShaper<Student>>();
             services.AddScoped<IRepositoryManager, RepositoryManager>();
         }
     }

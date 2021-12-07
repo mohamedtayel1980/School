@@ -12,28 +12,35 @@ using System.Threading.Tasks;
 using Utilities.Sorting;
 using Utilities.Paging;
 
+using System.Dynamic;
+using Domain.Entities.Helpers;
+
 namespace Persistence.Repositories
 {
     internal sealed class StudentRepository : RepositoryBase<Student>,
         IStudentRepository
     {
         private readonly ISortHelper<Student> _sortHelper;
+        private readonly IDataShaper<Student> _dataShaper;
 
         public StudentRepository(RepositoryContext repositoryContext, 
-            ISortHelper<Student> sortHelper)
+            ISortHelper<Student> sortHelper,
+              IDataShaper<Student> dataShaper)
              : base(repositoryContext)
         {
             _sortHelper = sortHelper;
+            _dataShaper = dataShaper;
         }
 
-        public IEnumerable<Student> GetStudentsPaged(StudentParametersPaging studentParametersPaging)
+        public PagedList<ShapedEntity> GetStudentsPaged(StudentParametersPaging studentParametersPaging)
         {
             IQueryable<Student> students = FindByCondition(o => o.Age >= studentParametersPaging.MinAge &&
                               o.Age <= studentParametersPaging.MaxAge)
                              .OrderBy(on => on.Name);
             SearchByName(ref students, studentParametersPaging.Name);
             var sortedStudents = _sortHelper.ApplySort(students, studentParametersPaging.OrderBy);
-            return PagedList<Student>.ToPagedList(sortedStudents,
+            var shapedStudents = _dataShaper.ShapeData(sortedStudents, studentParametersPaging.Fields);
+            return PagedList<ShapedEntity>.ToPagedList(shapedStudents.AsQueryable(),
                 studentParametersPaging.PageNumber,
                 studentParametersPaging.PageSize);
             //return FindAll()
@@ -48,5 +55,14 @@ namespace Persistence.Repositories
                 return;
             students = students.Where(o => o.Name.ToLower().Contains(studentName.Trim().ToLower()));
         }
+        public ShapedEntity GetStudentById(Guid studentId, string fields)
+        {
+            var student = FindByCondition(s => s.Id.Equals(studentId))
+                .DefaultIfEmpty(new Student())
+                .FirstOrDefault();
+            return _dataShaper.ShapeData(student, fields);
+        }
+
+        
     }
 }

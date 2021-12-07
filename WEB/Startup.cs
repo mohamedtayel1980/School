@@ -30,8 +30,15 @@ namespace WEB
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers()
-              .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
+           
+                  services.AddControllers(config =>
+                  {
+                      config.RespectBrowserAcceptHeader = true;
+                      config.ReturnHttpNotAcceptable = true;
+                  })
+                .AddXmlDataContractSerializerFormatters()
+                .AddNewtonsoftJson()
+                .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
        //     services.AddSwaggerGen(c =>
        //c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web", Version = "v1" }));
             services.ConfigureCors();
