@@ -1,6 +1,6 @@
 ﻿using CrossCutting.Sorting;
 using Domain.Entities;
-using Domain.Entities.Helpers;
+using Domain.Helpers;
 using Domain.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;

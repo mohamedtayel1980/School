@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Domain.Entities.Helpers
+namespace Domain.Helpers
 {
     public class DataShaper<T> : IDataShaper<T>
     {

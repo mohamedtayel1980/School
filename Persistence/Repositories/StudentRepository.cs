@@ -13,7 +13,7 @@ using Utilities.Sorting;
 using Utilities.Paging;
 
 using System.Dynamic;
-using Domain.Entities.Helpers;
+using Domain.Helpers;
 
 namespace Persistence.Repositories
 {

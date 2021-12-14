@@ -1,6 +1,6 @@
 ﻿
 using Domain.Entities;
-using Domain.Entities.Helpers;
+using Domain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
