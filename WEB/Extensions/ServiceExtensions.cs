@@ -39,6 +39,7 @@ namespace WEB.Extensions
         public static void ConfigureLoggerService(this IServiceCollection services)
         {
             services.AddSingleton<ILoggerManager, LoggerManager>();
+
         }
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration config)
         {
