@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Domain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Contracts
 {
-    public class StudentDto
+    public class StudentDto: ShapedEntity
     {
-        public Guid StudentId { get; set; }
+      
         [Required(ErrorMessage = "Name is required")]
         [StringLength(200, ErrorMessage = "Name can't be longer than 200 characters")]
         public string Name { get; set; }
@@ -16,5 +17,7 @@ namespace Contracts
         public bool IsRegularStudent { get; set; }
         public StudentDetailsDto StudentDetails { get; set; }
         public List<EvaluationDto> EvaluationsDto { get; set; }
+
+       
     }
 }

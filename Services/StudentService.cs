@@ -8,18 +8,23 @@ using Services.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Domain.Helpers;
+
 namespace Services
 {
     internal sealed class StudentService : IStudentService
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly IMapper _mapper;
+        private readonly IDataShaper<StudentDto> _dataShaper;
 
         public StudentService(IRepositoryManager repositoryManager,
-            IMapper mapper)
+            IMapper mapper,
+            IDataShaper<StudentDto> dataShaper)
         {
             _repositoryManager = repositoryManager;
             _mapper = mapper;
+            _dataShaper = dataShaper;
         }
 
         public StudentDto Create(StudentDtoForCreation studentForCreationDto)
@@ -68,7 +73,22 @@ namespace Services
             throw new NotImplementedException();
         }
 
+        public StudentDto GetById(Guid studentId, string fields)
+        {
+            var student = _repositoryManager.StudentRepository.FindByCondition(student => student.Id.Equals(studentId))
+                    .DefaultIfEmpty(new Student())
+                    .FirstOrDefault();
+           var studentDto= _mapper.Map<StudentDto>(student);
+          
+            var shaped= _dataShaper.ShapeData(studentDto, fields);
+            return _mapper.Map<StudentDto>(shaped);
+        }
 
+        public IEnumerable<StudentDto> MapShapedStudentsTOStudentDto(List<BaseEntity> students)
+        {
+            var studentsDto = _mapper.Map<List<StudentDto>>(students);
+            return studentsDto;
+        }
 
         public void Update(Guid studentId, StudentDtoForUpdate student)
         {

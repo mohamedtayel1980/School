@@ -39,8 +39,9 @@ namespace WEB
                 .AddXmlDataContractSerializerFormatters()
                 .AddNewtonsoftJson()
                 .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly);
-       //     services.AddSwaggerGen(c =>
-       //c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web", Version = "v1" }));
+            services.AddCustomMediaTypes();
+            //     services.AddSwaggerGen(c =>
+            //c.SwaggerDoc("v1", new OpenApiInfo { Title = "Web", Version = "v1" }));
             services.ConfigureCors();
             services.ConfigureIISIntegration();
             services.ConfigureLoggerService();

@@ -9,6 +9,8 @@ using System.Linq;
 using Microsoft.Net.Http.Headers;
 using System.Collections.Generic;
 using Utilities.APILinks;
+using Domain.Helpers;
+using Domain.Entities;
 
 namespace Presentation.Controllers
 {
@@ -48,7 +50,7 @@ namespace Presentation.Controllers
                 students.HasPrevious
             };
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metadata));
-            var shapedStudents = students.ToList();
+            var shapedStudents = students.Select(o => o.Entity).ToList(); ;
 
             var mediaType = (MediaTypeHeaderValue)HttpContext.Items["AcceptHeaderMediaType"];
 
@@ -57,18 +59,43 @@ namespace Presentation.Controllers
                 return Ok(shapedStudents);
             }
 
-            //for (var index = 0; index < students.Count(); index++)
-            //{
-            //    var accountLinks = CreateLinksForAccount(ownerId, accounts[index].Id, parameters.Fields);
-            //    shapedStudents[index].Add("Links", accountLinks);
-            //}
+            for (var index = 0; index < students.Count(); index++)
+            {
+                var studentLinks = CreateLinksForStudents(students[index].Id
+                    , studentPaging.Fields); ;
+                shapedStudents[index].Add("Links", studentLinks);
+            }
 
-            //var accountsWrapper = new LinkCollectionWrapper<Entity>(shapedAccounts);
+            var studentWrapper = new LinkCollectionWrapper<StudentDto>(_serviceManager.StudentService.
+                MapShapedStudentsTOStudentDto(shapedStudents).ToList());
 
-            //return Ok(CreateLinksForAccounts(accountsWrapper));
-            return Ok(students);
+            return Ok(CreateLinksForStudents(studentWrapper));
+            //return Ok(students);
         }
 
+        private object CreateLinksForStudents(Guid id, string fields)
+        {
+            var links = new List<Link>
+    {
+        new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetStudentById), values: new { id, fields }),
+        "self",
+        "GET"),
+        new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(DeleteStudent), values: new { id }),
+        "delete_Student",
+        "DELETE"),
+        new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(UpdateStudent), values: new { id }),
+        "update_stduent",
+        "PUT")
+    };
+            return links;
+        }
+        private LinkCollectionWrapper<StudentDto> CreateLinksForStudents(LinkCollectionWrapper<StudentDto> studentWrapper)
+        {
+            studentWrapper.Links.Add(new Link(_linkGenerator.GetUriByAction(HttpContext, nameof(GetStudentsPaged), values: new { }),
+                    "self",
+                    "GET"));
+            return studentWrapper;
+        }
         private IEnumerable<Link> CreateLinksForStudent(Guid id, string fields = "")
         {
 
@@ -86,7 +113,7 @@ namespace Presentation.Controllers
 
             if (!ModelState.IsValid) return BadRequest("student data is incorrect ");
             var studentDto = _serviceManager.StudentService.Create(student);
-            return CreatedAtRoute("StudentById", new { id = studentDto.StudentId }, studentDto);
+            return CreatedAtRoute("StudentById", new { id = studentDto.Id }, studentDto);
         }
         [Route("InfoStudentUpdate")]
         [HttpPut("{id}")]
@@ -112,11 +139,21 @@ namespace Presentation.Controllers
         }
         [Route("StudentById")]
         [HttpGet("{ownerId:guid}")]
-        public IActionResult GetStudentById(Guid id)
+        public IActionResult GetStudentById(Guid id,string fields)
         {
-            var studentDto = _serviceManager.StudentService.GetById(id);
+            var studentDto = _serviceManager.StudentService.GetById(id, fields);
 
-            return Ok(studentDto);
+            var mediaType = (MediaTypeHeaderValue)HttpContext.Items["AcceptHeaderMediaType"];
+
+            if (!mediaType.SubTypeWithoutSuffix.EndsWith("hateoas", StringComparison.InvariantCultureIgnoreCase))
+            {
+              
+                return Ok(studentDto.Entity);
+            }
+
+            studentDto.Entity.Add("Links", CreateLinksForStudent(studentDto.Id, fields));
+
+            return Ok(studentDto.Entity);
         }
 
 
