@@ -11,13 +11,13 @@ namespace WEB.Filters
 		public void OnActionExecuting(ActionExecutingContext context)
 		{
 			var acceptHeaderPresent = context.HttpContext.Request.Headers.ContainsKey("Accept");
-
 			if (!acceptHeaderPresent)
 			{
 				context.Result = new BadRequestObjectResult($"Accept header is missing.");
 				return;
 			}
 
+			//acceptHeaderPresent last
 			var mediaType = context.HttpContext.Request.Headers["Accept"].FirstOrDefault();
 
 			if (!MediaTypeHeaderValue.TryParse(mediaType, out MediaTypeHeaderValue outMediaType))
